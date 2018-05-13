@@ -38,7 +38,7 @@ public class ApplicationService {
      * Multiplies first value by second one.
      *
      * @param firstValue - represents first value.
-     * @param firstValue - represents second value.
+     * @param secondValue - represents second value.
      * @return secondValue sum of two numbers.
      */
     public double multiply(double firstValue, double secondValue) {
@@ -49,7 +49,7 @@ public class ApplicationService {
      * Divides first value by second one.
      *
      * @param firstValue - represents first value.
-     * @param firstValue - represents second value.
+     * @param secondValue - represents second value.
      * @return secondValue sum of two numbers.
      */
     public double divide(double firstValue, double secondValue) {

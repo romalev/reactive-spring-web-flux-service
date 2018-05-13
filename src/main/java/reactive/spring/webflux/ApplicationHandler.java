@@ -14,7 +14,6 @@ import reactive.spring.webflux.dto.ApplicationResponse;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
-import javax.validation.constraints.NotNull;
 
 /**
  * Dedicated handler to handle incoming requests and correspondent responses.
@@ -37,10 +36,10 @@ public class ApplicationHandler {
     /**
      * Handles incoming request in an async, non-blocking way based on reactive streams specification.
      * (Reactor - implementation from pivotal folks of reactive streams - direct competitor of Netflix's RxJava.)
-     *
+     * <p>
      * We take advantage of a rx-based stream (where so far only one item flows through it which is a user's request)
      * with deferred emitter which is being executed lazily once reactor subscribes to the stream.
-     *
+     * <p>
      * (We don't really need to worry about try - catch scenarios since we delegate handling an user's requests to rx-based executable pipeline.)
      *
      * @param request - holds incoming request's details.
@@ -73,11 +72,10 @@ public class ApplicationHandler {
                             // in that case bad request (400) is responded back to client.
                             final String failedMessage = "Operation failed to execute. Details : " + throwable.getMessage();
                             LOGGER.error(failedMessage);
-                            ApplicationResponse failedResponse = new ApplicationResponse("", failedMessage);
                             ServerResponse
                                     .badRequest()
                                     .contentType(MediaType.APPLICATION_JSON)
-                                    .body(BodyInserters.fromObject(failedResponse))
+                                    .body(BodyInserters.fromObject(new ApplicationResponse("", failedMessage)))
                                     .subscribe(monoSink::success);
                         }));
     }
