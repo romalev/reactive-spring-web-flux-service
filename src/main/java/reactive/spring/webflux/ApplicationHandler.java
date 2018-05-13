@@ -3,7 +3,6 @@ package reactive.spring.webflux;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -11,6 +10,7 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactive.spring.webflux.dto.ApplicationRequest;
 import reactive.spring.webflux.dto.ApplicationResponse;
+import reactive.spring.webflux.functions.ApplicationFunction;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
@@ -28,9 +28,6 @@ public class ApplicationHandler {
         gson = new Gson();
     }
 
-    @Autowired
-    private ApplicationService applicationService;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationHandler.class);
 
     /**
@@ -45,20 +42,20 @@ public class ApplicationHandler {
      * @param request - holds incoming request's details.
      * @return response item from the mono - based stream.
      */
-    public Mono<ServerResponse> handle(ServerRequest request) {
+    public Mono<ServerResponse> handle(ServerRequest request, ApplicationFunction applicationFunction) {
         return Mono.create(monoSink -> request
                 .bodyToMono(String.class)
-                .doOnNext(jsonBodyAsString -> LOGGER.debug("Add operation receives : {}", jsonBodyAsString))
+                .doOnNext(jsonBodyAsString -> LOGGER.debug("{} receives : {} for computation.", applicationFunction.getClass().getSimpleName(), jsonBodyAsString))
                 // trying to encode incoming json to application dto object
                 .map(jsonBodyAsString -> gson.fromJson(jsonBodyAsString, ApplicationRequest.class))
                 // trying to perform requested operation
                 .map(applicationRequest -> new ApplicationResponse(String.valueOf(
-                        applicationService.add(applicationRequest.getX(), applicationRequest.getY())),
+                        applicationFunction.compute(applicationRequest.getX(), applicationRequest.getY())),
                         "Result has been successfully calculated."))
                 .subscribe(
                         // handling happy case scenario :)
                         applicationResponse -> {
-                            LOGGER.debug("Add operation has been executed successfully.");
+                            LOGGER.debug("{} has been computed successfully.", applicationFunction.getClass().getSimpleName());
                             ServerResponse
                                     .ok()
                                     .contentType(MediaType.APPLICATION_JSON)
@@ -70,8 +67,8 @@ public class ApplicationHandler {
                         throwable -> {
                             // note : the only bad thing that might shows up right now is the problem of encoding incoming json.
                             // in that case bad request (400) is responded back to client.
-                            final String failedMessage = "Operation failed to execute. Details : " + throwable.getMessage();
-                            LOGGER.error(failedMessage);
+                            final String failedMessage = "Operation failed to execute. Details : " + throwable.getClass() + ": " + throwable.getMessage();
+                            LOGGER.error("{} failed. ", applicationFunction.getClass().getSimpleName(), failedMessage);
                             ServerResponse
                                     .badRequest()
                                     .contentType(MediaType.APPLICATION_JSON)
