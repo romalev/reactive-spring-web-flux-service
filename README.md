@@ -1,4 +1,4 @@
-POC of reactive service based on web-flux
+POC of reactive service based on spring reactor & web-flux
 -
 
 Introduction
