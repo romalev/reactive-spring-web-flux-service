@@ -35,6 +35,12 @@ public class ApplicationRouter {
                 .andRoute(RequestPredicates.POST(CONTEXT_PATH + "/add").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
                         request -> applicationHandler.handle(request, applicationConfig.getAddApplicationFunction()))
                 .andRoute(RequestPredicates.POST(CONTEXT_PATH + "/sub").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
-                        request -> applicationHandler.handle(request, applicationConfig.getSubApplicationFunction()));
+                        request -> applicationHandler.handle(request, applicationConfig.getSubApplicationFunction()))
+                .andRoute(RequestPredicates.POST(CONTEXT_PATH + "/divide").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
+                        request -> applicationHandler.handle(request, applicationConfig.getDivideApplicationFunction()))
+                .andRoute(RequestPredicates.POST(CONTEXT_PATH + "/multiply").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
+                        request -> applicationHandler.handle(request, applicationConfig.getMultiplyApplicationFunction()))
+                .andRoute(RequestPredicates.POST(CONTEXT_PATH + "/inPowerOf2SubSqrt").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
+                        request -> applicationHandler.handle(request, applicationConfig.getPowerOf2SubSqrtApplicationFunction()));
     }
 }

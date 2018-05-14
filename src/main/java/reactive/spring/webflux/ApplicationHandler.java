@@ -42,7 +42,7 @@ public class ApplicationHandler {
      * @param request - holds incoming request's details.
      * @return response item from the mono - based stream.
      */
-    public Mono<ServerResponse> handle(ServerRequest request, ApplicationFunction applicationFunction) {
+    public Mono<ServerResponse> handle(ServerRequest request, ApplicationFunction<Double, Double> applicationFunction) {
         return Mono.create(monoSink -> request
                 .bodyToMono(String.class)
                 .doOnNext(jsonBodyAsString -> LOGGER.debug("{} receives : {} for computation.", applicationFunction.getClass().getSimpleName(), jsonBodyAsString))
@@ -67,8 +67,8 @@ public class ApplicationHandler {
                         throwable -> {
                             // note : the only bad thing that might shows up right now is the problem of encoding incoming json.
                             // in that case bad request (400) is responded back to client.
-                            final String failedMessage = "Operation failed to execute. Details : " + throwable.getClass() + ": " + throwable.getMessage();
-                            LOGGER.error("{} failed. ", applicationFunction.getClass().getSimpleName(), failedMessage);
+                            final String failedMessage = "Operation failed to execute. Most likely the request body's json is not properly formed. Details : " + throwable.getClass() + ": " + throwable.getMessage();
+                            LOGGER.error("{} failed. {}", applicationFunction.getClass().getSimpleName(), failedMessage);
                             ServerResponse
                                     .badRequest()
                                     .contentType(MediaType.APPLICATION_JSON)

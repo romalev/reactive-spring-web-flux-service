@@ -2,9 +2,7 @@ package reactive.spring.webflux;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import reactive.spring.webflux.functions.AddApplicationFunction;
-import reactive.spring.webflux.functions.ApplicationFunction;
-import reactive.spring.webflux.functions.SubtractApplicationFunction;
+import reactive.spring.webflux.functions.*;
 
 /**
  * Contains application-specific configuration.
@@ -21,5 +19,21 @@ public class ApplicationConfig {
     public ApplicationFunction<Double, Double> getSubApplicationFunction() {
         return new SubtractApplicationFunction();
     }
+
+    @Bean
+    public ApplicationFunction<Double, Double> getDivideApplicationFunction() {
+        return new DivideApplicationFunction();
+    }
+
+    @Bean
+    public ApplicationFunction<Double, Double> getMultiplyApplicationFunction() {
+        return new MultiplyApplicationFunction();
+    }
+
+    @Bean
+    public ApplicationFunction<Double, Double> getPowerOf2SubSqrtApplicationFunction() {
+        return new PowerOf2SubSqrtApplicationFunction();
+    }
+
 
 }
