@@ -2,16 +2,12 @@ package com.reactive.service;
 
 import com.reactive.service.functions.ApplicationFunction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.RequestPredicates;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
-import org.springframework.web.reactive.function.server.ServerResponse;
 
 /**
  * Dedication application router - responsible for routing requests to appropriate handlers.
@@ -36,17 +32,14 @@ public class ApplicationRouter {
         this.powerOf2SubSqrtApplicationFunction = powerOf2SubSqrtApplicationFunction;
     }
 
+    /**
+     * Defines service routing - forwards specific user's request to appropriate handlers.
+     */
     @Bean
-    public RouterFunction<ServerResponse> route(ApplicationHandler applicationHandler) {
+    public RouterFunction<?> route(ApplicationHandler applicationHandler) {
         return RouterFunctions
                 .route(
-                        RequestPredicates.GET(CONTEXT_PATH + "/hello").and(RequestPredicates.accept(MediaType.TEXT_PLAIN)),
-                        request ->
-                                ServerResponse
-                                        .ok()
-                                        .contentType(MediaType.TEXT_PLAIN)
-                                        .body(BodyInserters.fromObject("Hello there!")))
-
+                        RequestPredicates.GET(CONTEXT_PATH + "/hello").and(RequestPredicates.accept(MediaType.TEXT_PLAIN)), applicationHandler::tellHelloToUser)
                 .andRoute(RequestPredicates.POST(CONTEXT_PATH + "/add").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
                         request -> applicationHandler.handle(request, addApplicationFunction))
                 .andRoute(RequestPredicates.POST(CONTEXT_PATH + "/sub").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
@@ -56,6 +49,7 @@ public class ApplicationRouter {
                 .andRoute(RequestPredicates.POST(CONTEXT_PATH + "/multiply").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
                         request -> applicationHandler.handle(request, multiplyApplicationFunction))
                 .andRoute(RequestPredicates.POST(CONTEXT_PATH + "/inPowerOf2SubSqrt").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
-                        request -> applicationHandler.handle(request, powerOf2SubSqrtApplicationFunction));
+                        request -> applicationHandler.handle(request, powerOf2SubSqrtApplicationFunction))
+                .andOther(RouterFunctions.route(RequestPredicates.accept(MediaType.APPLICATION_JSON), applicationHandler::handleOnMethodNotFound));
     }
 }

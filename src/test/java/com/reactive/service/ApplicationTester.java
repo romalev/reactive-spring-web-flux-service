@@ -11,8 +11,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+
 /**
  * Main application tester containing service's integration tests.
+ * <p>
+ * So far it doesn't cover all the "failure" cases that might happen within the service but covers the important ones.
  */
 @RunWith(SpringRunner.class)
 @ComponentScan(basePackages = "com.reactive.service")
@@ -38,19 +42,109 @@ public class ApplicationTester {
                 new PowerOf2SubSqrtApplicationFunction());
 
         testClient = WebTestClient.bindToRouterFunction(router.route(handler)).build();
-        correctApplicationRequestJson = "{'x': 12,'y': 21}";
+        correctApplicationRequestJson = "{'x': 40,'y': 20}";
     }
 
     @Test
-    public void verifyAddOperation() {
+    public void verifyAddOperationOnSuccess() {
         // given
-        testClient
-                .post()
-                .uri(ApplicationRouter.CONTEXT_PATH + "/add")
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(correctApplicationRequestJson), String.class)
-                .exchange()
-                .expectStatus().isOk();
+        String expectedResponse = "{\"result\":\"60.0\",\"message\":\"Result has been successfully calculated.\"}";
+        // then
+        verifyOnSuccess(expectedResponse, correctApplicationRequestJson, "/add");
     }
 
+    @Test
+    public void verifySubOperationOnSuccess() {
+        // given
+        String expectedResponse = "{\"result\":\"20.0\",\"message\":\"Result has been successfully calculated.\"}";
+        // then
+        verifyOnSuccess(expectedResponse, correctApplicationRequestJson, "/sub");
+    }
+
+    @Test
+    public void verifyDivideOperationOnSuccess() {
+        // given
+        String expectedResponse = "{\"result\":\"2.0\",\"message\":\"Result has been successfully calculated.\"}";
+        // then
+        verifyOnSuccess(expectedResponse, correctApplicationRequestJson, "/divide");
+    }
+
+    @Test
+    public void verifyMultiplyOperationOnSuccess() {
+        // given
+        String expectedResponse = "{\"result\":\"800.0\",\"message\":\"Result has been successfully calculated.\"}";
+        // given
+        verifyOnSuccess(expectedResponse, correctApplicationRequestJson, "/multiply");
+    }
+
+    @Test
+    public void verifyPowerOf2SubSqrtOperationOnSuccess() {
+        // given
+        String expectedResponse = "{\"result\":\"1595.5278640450003\",\"message\":\"Result has been successfully calculated.\"}";
+        // given
+        verifyOnSuccess(expectedResponse, correctApplicationRequestJson, "/inPowerOf2SubSqrt");
+    }
+
+    /**
+     * Verifies the rest operation on success.
+     *
+     * @param expectedResponse - represents the response we must receive from rest service.
+     * @param requestToBeSent  - message that is sent to rest endpoint.
+     * @param operation        - operation type.
+     */
+    private void verifyOnSuccess(String expectedResponse, String requestToBeSent, String operation) {
+        testClient
+                .post()
+                .uri(ApplicationRouter.CONTEXT_PATH + operation)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(requestToBeSent), String.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .isEqualTo(expectedResponse);
+    }
+
+    @Test
+    public void verifyBadlyFormedJsonRequestBodyOnAdd() {
+        // given
+        String messageToBeSend = "This is not json at all";
+        // then
+        verifyOnFailure("", messageToBeSend, "/add");
+    }
+
+    @Test
+    public void verifyBadlyFormedJsonRequestBodyOnSub() {
+        // given
+        String messageToBeSend = "{'x': 40asd,'y': 20}";
+
+        // then
+        verifyOnFailure("", messageToBeSend, "/sub");
+    }
+
+    @Test
+    public void verifyBadlyFormedJsonRequestBodyOnDivide() {
+        // given
+        String messageToBeSend = "";
+
+        // then
+        verifyOnFailure("", messageToBeSend, "/divide");
+    }
+
+    /**
+     * Verifies the rest operation on failure.
+     *
+     * @param expectedResponse - represents the response we must receive from rest service.
+     * @param requestToBeSent  - message that is sent to rest endpoint.
+     * @param operation        - operation type.
+     */
+    private void verifyOnFailure(String expectedResponse, String requestToBeSent, String operation) {
+        testClient
+                .post()
+                .uri(ApplicationRouter.CONTEXT_PATH + operation)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(requestToBeSent), String.class)
+                .exchange()
+                .expectStatus().isBadRequest();
+        // we are not verifying the exact content of the message, this might get improved over time.
+    }
 }
