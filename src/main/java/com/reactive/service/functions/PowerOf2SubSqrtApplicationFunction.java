@@ -1,4 +1,4 @@
-package reactive.spring.webflux.functions;
+package com.reactive.service.functions;
 
 /**
  * Computes x^2 - sqrt(y).

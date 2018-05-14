@@ -1,4 +1,4 @@
-package reactive.spring.webflux.functions;
+package com.reactive.service.functions;
 
 /**
  * General interface for functions that are executed within the service.

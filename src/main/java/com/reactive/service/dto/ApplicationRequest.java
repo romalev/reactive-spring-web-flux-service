@@ -1,4 +1,4 @@
-package reactive.spring.webflux.dto;
+package com.reactive.service.dto;
 
 import java.util.Objects;
 

@@ -7,7 +7,7 @@
         </encoder>
     </appender>
 
-    <logger name="reactive.spring.webflux" level="ALL" additivity="false">
+    <logger name="com.reactive.service" level="ALL" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
     <logger name="io.netty" level="INFO,ERROR" additivity="false">

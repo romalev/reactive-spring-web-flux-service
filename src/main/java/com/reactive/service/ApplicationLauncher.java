@@ -1,4 +1,4 @@
-package reactive.spring.webflux;
+package com.reactive.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +16,7 @@ import javax.annotation.PreDestroy;
  */
 @SpringBootApplication
 @Configuration
-@ComponentScan(basePackages = "reactive.spring.webflux")
+@ComponentScan(basePackages = "com.reactive.service")
 public class ApplicationLauncher {
 
     @Value("${server.port}")

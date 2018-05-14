@@ -1,7 +1,10 @@
-package reactive.spring.webflux;
+package com.reactive.service;
 
+import com.reactive.service.functions.ApplicationFunction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -16,10 +19,22 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 @Component
 public class ApplicationRouter {
 
-    private static final String CONTEXT_PATH = "/rest-service";
+    public static final String CONTEXT_PATH = "/rest-service";
+
+    private ApplicationFunction<Double, Double> addApplicationFunction;
+    private ApplicationFunction<Double, Double> subApplicationFunction;
+    private ApplicationFunction<Double, Double> divideApplicationFunction;
+    private ApplicationFunction<Double, Double> multiplyApplicationFunction;
+    private ApplicationFunction<Double, Double> powerOf2SubSqrtApplicationFunction;
 
     @Autowired
-    private ApplicationConfig applicationConfig;
+    public ApplicationRouter(ApplicationFunction<Double, Double> addApplicationFunction, ApplicationFunction<Double, Double> subApplicationFunction, ApplicationFunction<Double, Double> divideApplicationFunction, ApplicationFunction<Double, Double> multiplyApplicationFunction, ApplicationFunction<Double, Double> powerOf2SubSqrtApplicationFunction) {
+        this.addApplicationFunction = addApplicationFunction;
+        this.subApplicationFunction = subApplicationFunction;
+        this.divideApplicationFunction = divideApplicationFunction;
+        this.multiplyApplicationFunction = multiplyApplicationFunction;
+        this.powerOf2SubSqrtApplicationFunction = powerOf2SubSqrtApplicationFunction;
+    }
 
     @Bean
     public RouterFunction<ServerResponse> route(ApplicationHandler applicationHandler) {
@@ -33,14 +48,14 @@ public class ApplicationRouter {
                                         .body(BodyInserters.fromObject("Hello there!")))
 
                 .andRoute(RequestPredicates.POST(CONTEXT_PATH + "/add").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
-                        request -> applicationHandler.handle(request, applicationConfig.getAddApplicationFunction()))
+                        request -> applicationHandler.handle(request, addApplicationFunction))
                 .andRoute(RequestPredicates.POST(CONTEXT_PATH + "/sub").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
-                        request -> applicationHandler.handle(request, applicationConfig.getSubApplicationFunction()))
+                        request -> applicationHandler.handle(request, subApplicationFunction))
                 .andRoute(RequestPredicates.POST(CONTEXT_PATH + "/divide").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
-                        request -> applicationHandler.handle(request, applicationConfig.getDivideApplicationFunction()))
+                        request -> applicationHandler.handle(request, divideApplicationFunction))
                 .andRoute(RequestPredicates.POST(CONTEXT_PATH + "/multiply").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
-                        request -> applicationHandler.handle(request, applicationConfig.getMultiplyApplicationFunction()))
+                        request -> applicationHandler.handle(request, multiplyApplicationFunction))
                 .andRoute(RequestPredicates.POST(CONTEXT_PATH + "/inPowerOf2SubSqrt").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
-                        request -> applicationHandler.handle(request, applicationConfig.getPowerOf2SubSqrtApplicationFunction()));
+                        request -> applicationHandler.handle(request, powerOf2SubSqrtApplicationFunction));
     }
 }

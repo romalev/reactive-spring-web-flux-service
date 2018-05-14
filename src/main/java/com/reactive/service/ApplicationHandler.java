@@ -1,6 +1,7 @@
-package reactive.spring.webflux;
+package com.reactive.service;
 
 import com.google.gson.Gson;
+import com.reactive.service.functions.ApplicationFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -8,9 +9,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import reactive.spring.webflux.dto.ApplicationRequest;
-import reactive.spring.webflux.dto.ApplicationResponse;
-import reactive.spring.webflux.functions.ApplicationFunction;
+import com.reactive.service.dto.ApplicationRequest;
+import com.reactive.service.dto.ApplicationResponse;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
@@ -21,11 +21,10 @@ import javax.annotation.PostConstruct;
 @Component
 public class ApplicationHandler {
 
-    private Gson gson;
+    private final Gson gson;
 
-    @PostConstruct
-    private void init() {
-        gson = new Gson();
+    public ApplicationHandler(Gson gson) {
+        this.gson = gson;
     }
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationHandler.class);
