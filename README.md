@@ -30,7 +30,7 @@ Service's REST API
 **Given services exposes the following endpoints**
  
  Math operation     | Method        | Content Type      | URL                                                   | Request Body Example                         | Response Body Example  |
- | ----             | ------------- |:-------------    :| -----                                                 | :-----                                       |            ----        |
+ | ----             | ------------- |-------------    | -----                                                 | -----                                       |            ----        |
  | *x+y*            | POST          | application/json  |http://localhost:7777/rest-service/add                 |{ <br/> "x": "12",  <br/>"y": "1" <br/>}      |
  | *x-y*            | POST          | application/json  |http://localhost:7777/rest-service/sub                 |{ <br/> "x": "12",  <br/>"y": "1" <br/>}      |
  | *x/y*            | POST          | application/json  |http://localhost:7777/rest-service/divide              | { <br/> "x": "12",  <br/>"y": "1" <br/>}     |
