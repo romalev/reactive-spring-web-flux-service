@@ -27,7 +27,7 @@ Currently the service's default port on which it is going to accepts incoming re
 Service's REST API
 - 
 
-**Given services exposes the following endpoints**
+*See the list of avalilable endpoint is below.*
  
  Math operation     | Method        | Content Type      | URL                                                   | Request Body Example                         | Response Body Example  |
  | ----             | ------------- |-------------    | -----                                                 | -----                                       |            ----        |
