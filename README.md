@@ -29,13 +29,13 @@ Service's REST API
 
 **Given services exposes the following endpoints**
  
- Math operation     | Method        | Content Type      | URL                                                   | Request Body Example                         | Response Body Example  |
- | ----             | ------------- |-------------    | -----                                                 | -----                                       |            ----        |
- | *x+y*            | POST          | application/json  |http://localhost:7777/rest-service/add                 |{ <br/> "x": "12",  <br/>"y": "1" <br/>}      |
- | *x-y*            | POST          | application/json  |http://localhost:7777/rest-service/sub                 |{ <br/> "x": "12",  <br/>"y": "1" <br/>}      |
- | *x/y*            | POST          | application/json  |http://localhost:7777/rest-service/divide              | { <br/> "x": "12",  <br/>"y": "1" <br/>}     |
- | x*y              | POST          | application/json  |http://localhost:7777/rest-service/multiply            | { <br/> "x": "12",  <br/>"y": "1" <br/>}     |
- | *x^2 - sqrt(y)*  | POST          | application/json  |http://localhost:7777/rest-service/inPowerOf2SubSqrt   | { <br/> "x": "12",  <br/>"y": "1" <br/>}     |
+ Math operation     | Method        | Content Type      | URL                                                   | Request Body Example                                           | Response Body Example                                                        |
+ | ----             | ------------- |-------------    | -----                                                   | -----                                                          |            ----                                                              |
+ | *x+y*            | POST          | application/json  |http://localhost:7777/rest-service/add                 |{ <br/> "x": "[x_value]",  <br/>"y": "[y_value]" <br/>}         |{ <br/> "result": "[result]",  <br/>"message": "[additional details]" <br/>} 
+ | *x-y*            | POST          | application/json  |http://localhost:7777/rest-service/sub                 |{ <br/> "x": "[x_value]",  <br/>"y": "[y_value]" <br/>}         |{ <br/> "result": "[result]",  <br/>"message": "[additional details]" <br/>}
+ | *x/y*            | POST          | application/json  |http://localhost:7777/rest-service/divide              |{ <br/> "x": "[x_value]",  <br/>"y": "[y_value]" <br/>}         |{ <br/> "result": "[result]",  <br/>"message": "[additional details]" <br/>}
+ | x*y              | POST          | application/json  |http://localhost:7777/rest-service/multiply            |{ <br/> "x": "[x_value]",  <br/>"y": "[y_value]" <br/>}         |{ <br/> "result": "[result]",  <br/>"message": "[additional details]" <br/>}
+ | *x^2 - sqrt(y)*  | POST          | application/json  |http://localhost:7777/rest-service/inPowerOf2SubSqrt   |{ <br/> "x": "[x_value]",  <br/>"y": "[y_value]" <br/>}         |{ <br/> "result": "[result]",  <br/>"message": "[additional details]" <br/>}
 
  
  
