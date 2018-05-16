@@ -12,7 +12,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 /**
- * Responsible from booting up the spring boot - based application.
+ * Responsible from booting up the whole app (rest-service which is a spring boot based).
  */
 @SpringBootApplication
 @Configuration
