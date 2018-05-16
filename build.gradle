@@ -36,8 +36,6 @@ repositories {
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-webflux')
     compile('com.google.code.gson:gson:2.8.4')
-    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.7.0'
-    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.7.0'
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('io.projectreactor:reactor-test')
     testCompile group: 'junit', name: 'junit', version: '4.12'
