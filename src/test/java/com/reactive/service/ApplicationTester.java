@@ -1,17 +1,21 @@
 package com.reactive.service;
 
+import java.util.Objects;
+
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.reactive.service.functions.*;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
 
 /**
  * Main application tester containing service's integration tests.
@@ -93,7 +97,7 @@ public class ApplicationTester {
      * @param operation        - operation type.
      */
     private void verifyOnSuccess(String expectedResponse, String requestToBeSent, String operation) {
-        testClient
+        String result = testClient
                 .post()
                 .uri(ApplicationRouter.CONTEXT_PATH + operation)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -101,7 +105,13 @@ public class ApplicationTester {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(String.class)
-                .isEqualTo(expectedResponse);
+                .returnResult().getResponseBody();
+
+        JsonParser parser = new JsonParser();
+        JsonElement expected = parser.parse(expectedResponse);
+        JsonElement actual = parser.parse(Objects.requireNonNull(result));
+
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
